@@ -2,10 +2,12 @@ var canhao, imagemDoCanhao
 var bolaVerde, bolaVermelha, bolaAzul
 var rua, imagemDaRua
 var imagemBolaVerde, imagemBolaVermelha, imagemBolaAzul
-var fireball, criarFireball
+var fireball, grupoFireball
 var nuvem1, nuvem2, nuvem3
 var imagemDaNuvem1, imagemDaNuvem2, imagemDaNuvem3
 var imagemFireball
+var grupoVermelho, grupoVerde, grupoAzul;
+var placar = 0;
 
 function preload() {
   imagemDoCanhao = loadAnimation("canhao1.png","canhao2.png");
@@ -32,10 +34,16 @@ function setup() {
   nuvem1 = createSprite(190, 50, 10, 10)
   nuvem1.addImage("nuvem1", imagemDaNuvem1)
   nuvem1.scale = 0,30
+  grupoFireball = createGroup()
+  grupoVermelho  = createGroup();
+  grupoVerde  = createGroup();
+  grupoAzul = createGroup();
 }
 
 function draw() {
   background(150,230,500);
+
+  text("Placar: " + placar, 150, 20);
 
   Edge = createEdgeSprites(); 
   
@@ -48,7 +56,6 @@ function draw() {
     canhao.x = canhao.x + 9;
   }
 
-  canhao.debug = true
   canhao.setCollider("rectangle", 0,0,70,70)
 
   var selecionarBola = Math.round(random(1,3));
@@ -64,6 +71,24 @@ function draw() {
       bolaVermelha();
     }
   }
+
+  if (grupoFireball.isTouching(grupoVermelho)) {
+    grupoVermelho.destroyEach();
+    grupoFireball.destroyEach();
+    placar = placar + 1;
+  }
+    
+    if (grupoFireball.isTouching(grupoVerde)) {
+    grupoVerde.destroyEach();
+    grupoFireball.destroyEach();
+    placar = placar + 3;
+  }
+    
+    if (grupoFireball.isTouching(grupoAzul)) {
+      grupoAzul.destroyEach();
+      grupoFireball.destroyEach();
+    placar = placar + 2;
+  }
   
   if (keyWentDown("SPACE")) {
     criarFireball();
@@ -78,35 +103,43 @@ function criarFireball() {
   fireball.addImage(imagemFireball);
   fireball.x = canhao.x;
   fireball.y = canhao.y - 40;
-  fireball.velocityY = -4;
+  fireball.velocityY = -12;
   fireball.lifetime = 100;
   fireball.scale = 0.3;
-  fireball.setCollider("circle", -9, -70, 50)
-  fireball.debug = true;
+  fireball.setCollider("circle", -9, -70, 50);
+  grupoFireball.add(fireball);
+  console.log(grupoFireball)
 }
 
 function bolaVermelha() {
   var Vermelho = createSprite(Math.round(random(15, 385)), -10, 10, 10);
+  Vermelho.debug = true;
+  Vermelho.setCollider("circle", 0, 0, 60);
   Vermelho.addImage(imagemBolaVermelha);
   Vermelho.velocityY = 4;
   Vermelho.lifetime = 150;
   Vermelho.scale = 0.27;
-
+  grupoVermelho.add(Vermelho);
 }
 
 function bolaVerde() {
   var Verde = createSprite(Math.round(random(15, 385)), 0, 10, 10);
+  Verde.debug = true;
+  Verde.setCollider("circle", 0, 0, 60);
   Verde.addImage(imagemBolaVerde);
   Verde.velocityY = 3.5;
   Verde.lifetime = 150;
   Verde.scale = 0.27;
-
+  grupoVerde.add(Verde);
 }
 
 function bolaAzul() {
   var Azul = createSprite(Math.round(random(15, 385)), 0, 10, 10);
+  Azul.debug = true;
+  Azul.setCollider("circle", 0, 0, 60);
   Azul.addImage(imagemBolaAzul);
   Azul.velocityY = 3.5;
   Azul.lifetime = 150;
   Azul.scale = 0.27;
+  grupoAzul.add(Azul)
 }
